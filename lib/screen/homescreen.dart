@@ -1,3 +1,4 @@
+import 'package:fav_place/screen/add_fav_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,17 +12,26 @@ class Homescreen extends StatefulWidget {
 class _HomescreenState extends State<Homescreen> {
   @override
   void initState() {
-    _checkFirstTime();
     super.initState();
+    _checkFirstTime();
   }
 
-  void _checkFirstTime() {
-    final bool isFirstTime = true;
+  /*
+  {
+  "key" : "VALUE",
+  "isFirstTime" : true/false;
+  }
+  */
+
+  Future<void> _checkFirstTime() async {
+    final prefs = await SharedPreferences.getInstance();
+    final bool isFirstTime = prefs.getBool("isFirstTime") ?? true;
 
     if (isFirstTime) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _showdialog();
       });
+      prefs.setBool("isFirstTime", false);
     }
   }
 
@@ -32,7 +42,7 @@ class _HomescreenState extends State<Homescreen> {
         return AlertDialog(
           title: Text("Welcome!", style: Theme.of(context).textTheme.bodyLarge),
           content: Text(
-            "Thanks for installing app \n Take a photo of your fav place \n add a note",
+            "Thanks for installing app \nTake a photo of your fav place \nadd a note",
           ),
           actions: [
             TextButton(
@@ -65,6 +75,15 @@ class _HomescreenState extends State<Homescreen> {
             child: Text("Fav Place"),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddFavScreen()),
+          );
+        },
+        child: Icon(Icons.add),
       ),
     );
   }

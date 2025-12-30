@@ -14,9 +14,21 @@ class FavPlace extends StatelessWidget {
         scaffoldBackgroundColor: Color.fromARGB(255, 254, 211, 155),
         appBarTheme: AppBarTheme(backgroundColor: Colors.orangeAccent),
         textTheme: TextTheme(
-          bodyLarge: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-          bodyMedium: TextStyle(fontWeight: FontWeight.w400, fontSize: 18),
-          bodySmall: TextStyle(fontWeight: FontWeight.normal, fontSize: 18),
+          bodyLarge: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+          bodyMedium: const TextStyle(
+            fontWeight: FontWeight.w400,
+            fontSize: 18,
+          ),
+          bodySmall: const TextStyle(
+            fontWeight: FontWeight.normal,
+            fontSize: 18,
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.orange,
+            foregroundColor: Colors.white,
+          ),
         ),
       ),
     );
