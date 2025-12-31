@@ -46,6 +46,7 @@ class _AddFavScreenState extends ConsumerState<AddFavScreen> {
             images: _selectedImage!,
           ),
         );
+    ref.watch(favPlaceProvider.notifier).getFacPlace();
     Navigator.of(context).pop();
   }
 
