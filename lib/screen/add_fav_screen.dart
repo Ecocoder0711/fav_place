@@ -1,17 +1,20 @@
 import 'dart:io';
 
+import 'package:fav_place/model/fav_place_model.dart';
+import 'package:fav_place/providers/fav_place_provider.dart';
 import 'package:fav_place/widgets/textFormField.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AddFavScreen extends StatefulWidget {
+class AddFavScreen extends ConsumerStatefulWidget {
   const AddFavScreen({super.key});
 
   @override
-  State<AddFavScreen> createState() => _AddFavScreenState();
+  ConsumerState<AddFavScreen> createState() => _AddFavScreenState();
 }
 
-class _AddFavScreenState extends State<AddFavScreen> {
+class _AddFavScreenState extends ConsumerState<AddFavScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
@@ -76,6 +79,50 @@ class _AddFavScreenState extends State<AddFavScreen> {
                   hintText: 'Your Short Note',
                   lableText: 'Note',
                   mycontroller: _noteController,
+                ),
+                SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(Colors.orange),
+                      ),
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_titleController.text.trim().isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Please enter a place name'),
+                            ),
+                          );
+                          return;
+                        }
+
+                        if (_selectedImage == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Please take a photo')),
+                          );
+                          return;
+                        }
+                        FavPlace place = FavPlace(
+                          id: DateTime.now().toString(),
+                          favname: _titleController.text,
+                          notes: _noteController.text,
+                          images: _selectedImage!,
+                        );
+                        ref.read(favPlaceProvider.notifier).addPlace(place);
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Save"),
+                    ),
+                  ],
                 ),
               ],
             ),

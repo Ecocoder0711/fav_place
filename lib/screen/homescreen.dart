@@ -1,15 +1,18 @@
+import 'package:fav_place/model/fav_place_model.dart';
+import 'package:fav_place/providers/fav_place_provider.dart';
 import 'package:fav_place/screen/add_fav_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Homescreen extends StatefulWidget {
+class Homescreen extends ConsumerStatefulWidget {
   const Homescreen({super.key});
 
   @override
-  State<Homescreen> createState() => _HomescreenState();
+  ConsumerState<Homescreen> createState() => _HomescreenState();
 }
 
-class _HomescreenState extends State<Homescreen> {
+class _HomescreenState extends ConsumerState<Homescreen> {
   @override
   void initState() {
     super.initState();
@@ -57,6 +60,7 @@ class _HomescreenState extends State<Homescreen> {
 
   @override
   Widget build(BuildContext context) {
+    final place = ref.watch(favPlaceProvider);
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -67,12 +71,12 @@ class _HomescreenState extends State<Homescreen> {
         ),
       ),
       body: ListView.builder(
-        itemCount: 4,
+        itemCount: place.length,
         itemBuilder: (context, index) {
           return Card(
             margin: const EdgeInsets.all(10),
             color: Colors.white,
-            child: Text("Fav Place"),
+            child: Text(place[index].favname),
           );
         },
       ),
