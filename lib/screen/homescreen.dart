@@ -1,7 +1,6 @@
-import 'package:fav_place/model/fav_place_model.dart';
+import 'package:flutter/material.dart';
 import 'package:fav_place/providers/fav_place_provider.dart';
 import 'package:fav_place/screen/add_fav_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
