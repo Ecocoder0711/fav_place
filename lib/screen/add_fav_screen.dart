@@ -20,6 +20,35 @@ class _AddFavScreenState extends ConsumerState<AddFavScreen> {
   final ImagePicker _picker = ImagePicker();
   File? _selectedImage;
 
+  final _formKey = GlobalKey<FormState>();
+
+  void _savePlace() {
+    if (!_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Please enter a place name')));
+      return;
+    }
+    // condition to check
+    if (_selectedImage == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Please take a photo')));
+      return;
+    }
+    ref
+        .read(favPlaceProvider.notifier)
+        .addPlace(
+          FavPlace(
+            id: DateTime.now().toString(),
+            favname: _titleController.text,
+            notes: _noteController.text,
+            images: _selectedImage!,
+          ),
+        );
+    Navigator.of(context).pop();
+  }
+
   Future<void> _pickImage() async {
     //open camera & click image
     XFile? pickedImage = await _picker.pickImage(source: ImageSource.camera);
@@ -49,6 +78,7 @@ class _AddFavScreenState extends ConsumerState<AddFavScreen> {
       ),
       body: SingleChildScrollView(
         child: Form(
+          key: _formKey,
           child: Padding(
             padding: const EdgeInsets.all(10),
             child: Column(
@@ -60,13 +90,25 @@ class _AddFavScreenState extends ConsumerState<AddFavScreen> {
                         onPressed: _pickImage,
                         child: Text('Click Photo'),
                       )
-                    : Image.file(
-                        _selectedImage!,
-                        height: 200,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
+                    : Stack(
+                        children: [
+                          Image.file(
+                            _selectedImage!,
+                            height: 200,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
+                          Positioned(
+                            bottom: 8,
+                            right: 8,
+                            child: ElevatedButton.icon(
+                              onPressed: _pickImage,
+                              icon: Icon(Icons.camera_alt),
+                              label: Text('Retake'),
+                            ),
+                          ),
+                        ],
                       ),
-
                 SizedBox(height: 20),
                 // form
                 Textformfield(
@@ -96,6 +138,27 @@ class _AddFavScreenState extends ConsumerState<AddFavScreen> {
                     ),
                     ElevatedButton(
                       onPressed: () {
+                        _savePlace();
+                      },
+                      child: Text("Save"),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+// another method to implement save function 
+
+/* 
+ElevatedButton(
+                      onPressed: () {
                         if (_titleController.text.trim().isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -122,13 +185,4 @@ class _AddFavScreenState extends ConsumerState<AddFavScreen> {
                       },
                       child: Text("Save"),
                     ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+*/
